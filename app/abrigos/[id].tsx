@@ -88,7 +88,15 @@ export default function AbrigoDetailsScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title={abrigo.nome} showBack />
+      <Header
+        title={abrigo.nome}
+        showBack
+        rightAction={{
+          icon: 'create-outline',
+          onPress: () =>
+            router.push({ pathname: '/abrigos/cadastro', params: { id: abrigo.id } }),
+        }}
+      />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.statusCard}>
           <View style={[styles.statusBadge, { backgroundColor: `${statusColor}22`, borderColor: `${statusColor}44` }]}>

@@ -48,7 +48,11 @@ export default function AbrigosScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Abrigos" subtitle={`${filtered.length} registros`} />
+      <Header
+        title="Abrigos"
+        subtitle={`${filtered.length} registros`}
+        rightAction={{ icon: 'add-outline', onPress: () => router.push('/abrigos/cadastro') }}
+      />
       <View style={styles.searchRow}>
         <Ionicons name="search-outline" size={16} color={Colors.textMuted} style={styles.searchIcon} />
         <TextInput

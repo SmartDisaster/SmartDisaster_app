@@ -44,9 +44,9 @@ function RootLayoutNav() {
       <Stack.Screen name="boasvindas" />
       <Stack.Screen name="login" />
       <Stack.Screen name="register" options={{ animation: 'slide_from_right' }} />
-      <Stack.Screen name="dashboard" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="abrigos/[id]" options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="abrigos/cadastro" options={{ animation: 'slide_from_right' }} />
       <Stack.Screen name="vitimas/cadastro" options={{ animation: 'slide_from_right' }} />
       <Stack.Screen name="doacoes/cadastro" options={{ animation: 'slide_from_right' }} />
       <Stack.Screen name="doacoes/novo/[abrigoId]" options={{ animation: 'slide_from_right' }} />
