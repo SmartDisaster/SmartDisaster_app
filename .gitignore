@@ -1,0 +1,42 @@
+# ── Dependências ────────────────────────────────────────────────────────────
+node_modules/
+
+# ── Expo ────────────────────────────────────────────────────────────────────
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# ── Variáveis de ambiente (nunca versionar) ──────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Certificados e chaves de assinatura ──────────────────────────────────────
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# ── Pastas nativas geradas pelo Expo Prebuild ────────────────────────────────
+android/
+ios/
+
+# ── Sistema operacional ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ────────────────────────────────────────────────────────────────────
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# ── IDEs ────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
