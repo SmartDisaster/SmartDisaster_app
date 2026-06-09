@@ -73,19 +73,7 @@ O sistema centraliza todas as operações críticas de resposta a emergências e
 | React Native Reanimated | Animações |
 | Expo Vector Icons (Ionicons) | Ícones |
 
-### Banco de Dados
 
-| Ambiente | Banco |
-|---|---|
-| Desenvolvimento | H2 (in-memory) — zero configuração |
-| Produção | Oracle (via profile `oracle`) |
-
-### DevOps / Deploy
-
-| Ferramenta | Uso |
-|---|---|
-| Maven Wrapper | Build sem instalação local do Maven |
-| Spring Profiles | Separação dev (H2) / prod (Oracle) |
 
 ### Outras bibliotecas
 
@@ -313,15 +301,21 @@ No terminal do Expo:
 
 ### Configuração da URL da API
 
-Por padrão, o app aponta para `http://10.0.2.2:8080`, que é o endereço do `localhost` da máquina host visto pelo emulador Android.
+Crie um arquivo `.env` na raiz do projeto mobile com a URL da API:
 
-**Para dispositivo físico ou outro endereço**, crie (ou edite) o arquivo `.env` na raiz do projeto mobile:
+**Opção 1 — API em produção (Railway, recomendado):**
 
 ```env
-EXPO_PUBLIC_API_URL=http://SEU_IP_LOCAL:8080
+EXPO_PUBLIC_API_URL=https://smartdisasterjava-production.up.railway.app
 ```
 
-> Para descobrir seu IP local: `ipconfig` (Windows) ou `ifconfig` (Mac/Linux). Use o IP da rede Wi-Fi (ex: `192.168.x.x`).
+**Opção 2 — API rodando localmente:**
+
+```env
+EXPO_PUBLIC_API_URL=http://10.0.2.2:8080
+```
+
+> `10.0.2.2` é o endereço do `localhost` da máquina host visto pelo emulador Android. Para dispositivo físico, use o IP da sua rede Wi-Fi (descubra com `ipconfig` no Windows ou `ifconfig` no Mac/Linux), ex: `http://192.168.x.x:8080`.
 
 A variável é lida em `services/api.ts`:
 
