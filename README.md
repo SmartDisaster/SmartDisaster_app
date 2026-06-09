@@ -19,8 +19,8 @@
 |---|---|
 | Vídeo Pitch | https://youtu.be/ItPEbWxzNkw |
 | Vídeo de explicação do projeto | https://youtu.be/pk97vHmkX98 |
-| Deploy da API | *(preencher após publicar)* |
-| Swagger da API | *(preencher — ex: https://sua-api.com/swagger-ui.html)* |
+| Deploy da API | https://smartdisasterjava-production.up.railway.app |
+| Swagger da API | https://smartdisasterjava-production.up.railway.app/swagger-ui.html |
 
 ---
 
