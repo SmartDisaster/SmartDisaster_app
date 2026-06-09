@@ -23,8 +23,6 @@ import Theme from '../../constants/theme';
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 type AlertLevel = 'NORMAL' | 'ATENÇÃO' | 'ALTO' | 'CRÍTICO';
 
-// ─── Assets ──────────────────────────────────────────────────────────────────
-
 const ASSETS = {
   banner:     require('../../assets/banner.png.png'),
   tempestade: require('../../assets/Tempestade.png.png'),
@@ -32,16 +30,12 @@ const ASSETS = {
   radar:      require('../../assets/Radar.png.png'),
 };
 
-// Categorias NASA que têm imagem
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CAT_IMAGE: Record<string, any> = {
   severeStorms: ASSETS.tempestade,
   floods:       ASSETS.tempestade,
   wildfires:    ASSETS.incendio,
   volcanoes:    ASSETS.incendio,
 };
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function calcAlertLevel(count: number): AlertLevel {
   if (count === 0) return 'NORMAL';
@@ -90,8 +84,6 @@ const NASA_CAT: Record<string, { label: string; icon: IoniconsName; color: strin
 function catInfo(id: string) {
   return NASA_CAT[id] ?? { label: 'Evento', icon: 'warning-outline' as IoniconsName, color: '#94A3B8' };
 }
-
-// ─── StatCard ─────────────────────────────────────────────────────────────────
 
 function StatCard({
   icon, value, label, sub, color, onPress,
@@ -144,8 +136,6 @@ const statS = StyleSheet.create({
   },
   strip: { height: 3, borderRadius: 2, marginTop: 'auto' },
 });
-
-// ─── AlertCard ────────────────────────────────────────────────────────────────
 
 function AlertCard({ event, onPress }: { event: NasaEvent; onPress: () => void }) {
   const cat = event.categories[0];
@@ -240,8 +230,6 @@ const alertS = StyleSheet.create({
   coord: { color: Colors.textMuted, fontSize: 11 },
 });
 
-// ─── Screen ──────────────────────────────────────────────────────────────────
-
 export default function DashboardScreen() {
   const { user, logout } = useAuth();
   const insets = useSafeAreaInsets();
@@ -269,7 +257,7 @@ export default function DashboardScreen() {
     try {
       const events = await getActiveDisasters(10);
       setAlerts(events.slice(0, 5));
-    } catch { /* silent */ }
+    } catch { }
   }
 
   useEffect(() => { load(); }, []);
@@ -285,7 +273,6 @@ export default function DashboardScreen() {
   const alertLevel = calcAlertLevel(alerts.length);
   const levelColor = LEVEL_COLOR[alertLevel];
 
-  // Exibe exatamente 1 tempestade/enchente + 1 incêndio/vulcão no dashboard
   const stormAlert = alerts.find(e => ['severeStorms', 'floods'].includes(e.categories[0]?.id ?? ''));
   const fireAlert  = alerts.find(e => ['wildfires', 'volcanoes'].includes(e.categories[0]?.id ?? ''));
   const previewAlerts = ([stormAlert, fireAlert].filter(Boolean) as NasaEvent[]).length > 0
@@ -309,7 +296,6 @@ export default function DashboardScreen() {
         }
       >
 
-        {/* ── Header pessoal ── */}
         <View style={S.header}>
           <View>
             <Text style={S.greetLine}>{greeting()},</Text>
@@ -329,7 +315,6 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* ── Hero Banner (banner.png) ── */}
         <ImageBackground
           source={ASSETS.banner}
           style={S.heroBg}
@@ -337,7 +322,6 @@ export default function DashboardScreen() {
           resizeMode="cover"
         />
 
-        {/* ── Métricas 2×2 ── */}
         <View style={S.grid}>
           <View style={S.gridRow}>
             <StatCard
@@ -365,7 +349,6 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* ── Alertas Recentes (com Tempestade/Incendio) ── */}
         {alerts.length > 0 && (
           <View style={S.section}>
             <View style={S.sectionHead}>
@@ -390,7 +373,6 @@ export default function DashboardScreen() {
           </View>
         )}
 
-        {/* ── Mapa de Operações (radar.png) ── */}
         <View style={S.section}>
           <View style={S.sectionHead}>
             <View style={S.sectionLeft}>
@@ -410,7 +392,6 @@ export default function DashboardScreen() {
             >
               <View style={S.radarOverlay} />
               <View style={S.radarContent}>
-                {/* Topo: live pill + brand */}
                 <View style={S.radarTopRow}>
                   <View style={S.radarLivePill}>
                     <View style={S.radarDot} />
@@ -418,7 +399,6 @@ export default function DashboardScreen() {
                   </View>
                   <Text style={S.radarBrand}>SmartDisaster</Text>
                 </View>
-                {/* Base: contagem grande */}
                 <View style={S.radarBottomRow}>
                   <Text style={S.radarCount}>{abrigos ?? '—'}</Text>
                   <View style={S.radarLabelGroup}>
@@ -431,7 +411,6 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* ── Rodapé ── */}
         <View style={S.footer}>
           <Ionicons name="planet-outline" size={11} color={Colors.textMuted} />
           <Text style={S.footerText}>Dados satelitais via NASA EONET</Text>
@@ -442,13 +421,10 @@ export default function DashboardScreen() {
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
-
 const S = StyleSheet.create({
   root: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 20, gap: 22, paddingBottom: 52 },
 
-  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -486,18 +462,15 @@ const S = StyleSheet.create({
   },
   avatarText: { color: Colors.primary, fontSize: 16, fontWeight: '700', letterSpacing: 0.5 },
 
-  // Hero Banner
   heroBg: {
     height: 190,
     marginHorizontal: -20,
   },
   heroBgImg: { borderRadius: 8 },
 
-  // Stat grid
   grid: { gap: 10 },
   gridRow: { flexDirection: 'row', gap: 10 },
 
-  // Sections
   section: { gap: 10 },
   sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   sectionLeft: { flexDirection: 'row', alignItems: 'center', gap: 7 },
@@ -506,7 +479,6 @@ const S = StyleSheet.create({
   sectionLink: { color: Colors.secondary, fontSize: 12, fontWeight: '600' },
   list: { gap: 8 },
 
-  // Radar card
   radarWrap: {
     borderRadius: 20,
     overflow: 'hidden',
@@ -545,7 +517,6 @@ const S = StyleSheet.create({
   radarLabelBig: { color: 'rgba(255,255,255,0.75)', fontSize: 15, fontWeight: '600' },
   radarLabelSub: { color: 'rgba(255,255,255,0.42)', fontSize: 12 },
 
-  // Footer
   footer: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 5, paddingTop: 4,

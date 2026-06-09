@@ -10,7 +10,6 @@ export interface ApiStatus {
   online: boolean;
 }
 
-// Uses a standalone axios instance (no auth interceptor) to avoid redirect side-effects
 const probe = axios.create({ baseURL: BASE_URL, timeout: 5000 });
 
 export async function checkApiStatus(): Promise<ApiStatus> {
@@ -20,7 +19,6 @@ export async function checkApiStatus(): Promise<ApiStatus> {
   } catch (err: unknown) {
     const axiosErr = err as { response?: { status?: number } };
     if (axiosErr.response) {
-      // Got a response — if 404 the route doesn't exist, try /abrigos
       if (axiosErr.response.status === 404) {
         try {
           await probe.get('/abrigos');
@@ -30,10 +28,8 @@ export async function checkApiStatus(): Promise<ApiStatus> {
           return { online: !!axiosErr2.response };
         }
       }
-      // Any other HTTP status (401, 403, 500…) means server is reachable
       return { online: true };
     }
-    // Network error / timeout — server is offline
     return { online: false };
   }
 }

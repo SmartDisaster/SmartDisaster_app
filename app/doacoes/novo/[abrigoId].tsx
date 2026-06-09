@@ -129,7 +129,6 @@ export default function NovaDoacao() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={[styles.root, { paddingTop: insets.top }]}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
             <Ionicons name="arrow-back" size={20} color={Colors.text} />
@@ -143,7 +142,6 @@ export default function NovaDoacao() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Info do abrigo */}
           <View style={styles.abrigoCard}>
             <View style={styles.abrigoRow}>
               <View style={styles.abrigoIconWrap}>
@@ -165,7 +163,6 @@ export default function NovaDoacao() {
             </View>
           </View>
 
-          {/* Necessidades */}
           <View style={styles.sectionHeader}>
             <Ionicons name="list-outline" size={16} color={Colors.primary} />
             <Text style={styles.sectionTitle}>Necessidades Pendentes</Text>
@@ -224,7 +221,6 @@ export default function NovaDoacao() {
             </View>
           )}
 
-          {/* Formulário — aparece quando há necessidade selecionada */}
           {selectedNec && (
             <View style={styles.formCard}>
               <View style={styles.formHeader}>

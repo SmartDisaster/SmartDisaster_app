@@ -1,275 +1,334 @@
-# SmartDisaster — Mobile
+# SmartDisaster
 
-> Plataforma mobile de gestão de resposta a desastres naturais monitorados por satélite.
-> **FIAP — Global Solution 2026/1 · Economia Espacial**
+> Plataforma integrada de gestão de resposta a desastres — FIAP Global Solution 2026/1 · Economia Espacial
 
 ---
 
-## Sumário
+## Integrantes
 
-- [Sobre o projeto](#sobre-o-projeto)
-- [Conexão com o desafio espacial](#conexão-com-o-desafio-espacial)
-- [Funcionalidades](#funcionalidades)
-- [Telas e navegação](#telas-e-navegação)
-- [Tecnologias](#tecnologias)
-- [Estrutura do projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Como rodar](#como-rodar)
-- [Variáveis de ambiente](#variáveis-de-ambiente)
-- [Integração com a API](#integração-com-a-api)
-- [Autenticação](#autenticação)
-- [Autor](#autor)
+| Nome | RM |
+|---|---|
+| Pedro Vaz | RM566551 |
+| João Victor Luiz Oliveira Resende | RM565139 |
+
+---
+
+## Links importantes
+
+| Recurso | URL |
+|---|---|
+| Vídeo Pitch | https://youtu.be/ItPEbWxzNkw |
+| Vídeo de explicação do projeto | https://youtu.be/pk97vHmkX98 |
+| Deploy da API | *(preencher após publicar)* |
+| Swagger da API | *(preencher — ex: https://sua-api.com/swagger-ui.html)* |
 
 ---
 
 ## Sobre o projeto
 
-O **SmartDisaster Mobile** é o aplicativo de campo da plataforma SmartDisaster. Ele permite que voluntários e administradores gerenciem em tempo real a resposta a desastres naturais — abrigos, vítimas, doações e necessidades — diretamente do celular, integrado a uma API REST protegida por JWT.
-
-O app foi construído com **React Native + Expo** e consome a API Spring Boot do mesmo projeto.
+O **SmartDisaster** é uma plataforma de gestão de resposta a desastres naturais que conecta tecnologia espacial a situações de emergência. O app permite que voluntários e administradores coordenem em campo, pelo celular, o cadastro e o monitoramento de abrigos, vítimas, doações e necessidades — enquanto o painel exibe em tempo real os eventos naturais ativos detectados por satélite via **NASA EONET API**.
 
 ---
 
-## Conexão com o desafio espacial
+## Objetivo da solução
 
-O desafio da FIAP propõe soluções que conectem a **economia espacial** a problemas reais na Terra. O SmartDisaster se encaixa diretamente em dois dos eixos do desafio:
+O sistema centraliza todas as operações críticas de resposta a emergências em um único lugar:
 
-| Eixo do desafio | Como o SmartDisaster atende |
+- **Abrigos** — cadastro, capacidade, localização, status (ativo / lotado / inativo)
+- **Vítimas** — registro com condição de saúde e vínculo ao abrigo
+- **Voluntários** — cadastro com autenticação JWT e controle de perfil
+- **Doações** — registro, entrega e cancelamento por voluntários
+- **Necessidades** — o que cada abrigo precisa, com status de atendimento
+- **Alertas em tempo real** — integração com NASA EONET para eventos naturais ativos (enchentes, incêndios, tempestades, vulcões)
+- **Engine de matching** — pareamento automático de doações disponíveis com necessidades pendentes
+
+---
+
+## Tecnologias utilizadas
+
+### Backend / API
+
+| Tecnologia | Uso |
 |---|---|
-| Monitoramento satelital para previsão de desastres | A API possui um módulo `SensorLeitura` que recebe dados de sensores IoT instalados nos abrigos — dados que podem ser alimentados por imagens e telemetria de satélites (via Space Charter / NASA / ESA) |
-| Sistemas de resposta a emergências | O app gerencia toda a operação de campo após a detecção do desastre: abrigos, vítimas, doações e matching automático de recursos |
-| Conectividade em situações de emergência | A arquitetura é offline-tolerante e pode ser conectada a redes via satélite (ex: Starlink) em regiões sem infraestrutura |
+| Java 17 | Linguagem principal |
+| Spring Boot 3.2.4 | Framework REST |
+| Spring Security | Autenticação e autorização |
+| Spring Data JPA / Hibernate | ORM e acesso a dados |
+| Spring HATEOAS | Respostas hipermídia |
+| JJWT 0.11.5 | Geração e validação de JWT |
+| SpringDoc OpenAPI 2.3.0 | Documentação Swagger |
+| Lombok | Redução de boilerplate |
+| Maven | Build e dependências |
 
-**Fluxo completo:**
+### Mobile
 
-```
-Satélite detecta evento climático extremo
-            ↓
-Alerta gerado via dados orbitais (NASA / ESA / Space Charter)
-            ↓
-SmartDisaster ativa o modo de resposta
-            ↓
-App mobile coordena abrigos, vítimas, doações e voluntários em tempo real
-```
+| Tecnologia | Uso |
+|---|---|
+| React Native 0.78 | Framework mobile |
+| Expo SDK 54 | Toolchain e build |
+| Expo Router 4 | Navegação baseada em arquivos |
+| TypeScript 5.3 | Tipagem estática |
+| Axios 1.7 | Requisições HTTP com interceptors JWT |
+| AsyncStorage | Persistência de token e sessão |
+| React Native Reanimated | Animações |
+| Expo Vector Icons (Ionicons) | Ícones |
 
-**ODS da ONU atendidos:** 11 (Cidades sustentáveis), 13 (Ação climática), 9 (Inovação e infraestrutura)
+### Banco de Dados
+
+| Ambiente | Banco |
+|---|---|
+| Desenvolvimento | H2 (in-memory) — zero configuração |
+| Produção | Oracle (via profile `oracle`) |
+
+### DevOps / Deploy
+
+| Ferramenta | Uso |
+|---|---|
+| Maven Wrapper | Build sem instalação local do Maven |
+| Spring Profiles | Separação dev (H2) / prod (Oracle) |
+
+### Outras bibliotecas
+
+- **NASA EONET API** — feed de desastres naturais em tempo real
+- **ESLint + Prettier** — qualidade e formatação de código (mobile)
 
 ---
 
 ## Funcionalidades
 
-### Autenticação
-- Cadastro de voluntário com validação completa (nome, e-mail, telefone, senha)
-- Login com e-mail e senha via JWT
-- Persistência de sessão com AsyncStorage
+### Login e autenticação
+- Cadastro de voluntário com nome, e-mail e senha
+- Login com retorno de JWT Bearer Token
+- Persistência de sessão no dispositivo via AsyncStorage
 - Logout com confirmação
 - Indicador visual de status da API (online / offline) na tela de login
+- Proteção de rotas: usuários não autenticados são redirecionados automaticamente para `/login`
 
 ### Dashboard
-- Painel com contadores em tempo real: abrigos, vítimas, doações, necessidades
-- Pull-to-refresh para atualizar os dados
-- Ações rápidas de navegação
-- Identificação do role do usuário (Admin / Voluntário)
+- Contadores em tempo real: total de abrigos, vítimas, doações e necessidades
+- Nível de alerta calculado dinamicamente com base nos eventos NASA (Normal / Atenção / Alto / Crítico)
+- Feed de desastres naturais ativos via NASA EONET
+- Pull-to-refresh
 
-### Abrigos
+### Gestão de abrigos (CRUD completo)
 - Listagem com busca por nome, cidade ou status
-- Detalhe de cada abrigo com endereço completo
-- Status visual: ATIVO, LOTADO, INATIVO
+- Cadastro com endereço completo (rua, número, bairro, cidade, estado, CEP) e coordenadas GPS
+- Edição e exclusão (exclusão lógica — status muda para INATIVO)
+- Tela de detalhe com vítimas acolhidas e necessidades do abrigo
+- Barra visual de ocupação (total de vítimas vs. capacidade máxima)
+- Status: ATIVO, LOTADO, INATIVO — alterado automaticamente por leitura de sensor
 
-### Vítimas
-- Listagem com busca por nome, CPF ou abrigo
-- Filtro por abrigo via chips horizontais
-- Cadastro com validação de CPF e data de nascimento
+### Gestão de vítimas (CRUD completo)
+- Listagem com busca por nome ou CPF
+- Cadastro com CPF (máscara automática), data de nascimento e condição de saúde
 - Edição e exclusão de registros
-- Máscara automática de CPF e data
+- Vínculo com o abrigo
 
-### Doações
+### Gestão de doações
 - Listagem de todas as doações registradas
-- Cadastro com seleção de tipo (Alimentos, Água, Roupas, Medicamentos, Higiene, Cobertores, Outros)
-- Vinculação automática ao voluntário logado (extraído do JWT)
-- Status: DISPONÍVEL, ENTREGUE, CANCELADA
+- Cadastro com tipo, descrição, quantidade e vínculo ao abrigo/necessidade
+- Ações: marcar como entregue, cancelar, excluir
+- Doação vinculada automaticamente ao voluntário logado
 
-### Necessidades
-- Listagem das necessidades de cada abrigo
-- Status: PENDENTE, ATENDIDA, CANCELADA
+### Gestão de necessidades
+- Cada abrigo lista suas necessidades com tipo, quantidade e status
+- Status: PENDENTE, ATENDIDA
+- Atendimento automático via engine de matching
 
----
+### Alertas (NASA EONET)
+- Feed de eventos naturais ativos em tempo real
+- Categorias: tempestades, enchentes, incêndios, vulcões, terremotos etc.
+- Exibe localização e data do evento
 
-## Telas e navegação
+### Engine de matching (backend)
+- `POST /matching/executar` percorre doações disponíveis e necessidades pendentes do mesmo tipo
+- Cria registro de `MatchingDoacaoNecessidade`
+- Atualiza status da doação para ENTREGUE e da necessidade para ATENDIDA automaticamente
 
-```
-/                   → Redireciona para /login ou /(tabs)
-/login              → Tela de login com status da API
-/register           → Cadastro de voluntário
-/dashboard          → Alias para /(tabs)
-
-/(tabs)
-  ├── index         → Dashboard (painel geral)
-  ├── abrigos       → Lista de abrigos
-  ├── vitimas       → Lista de vítimas
-  ├── doacoes       → Lista de doações
-  └── necessidades  → Lista de necessidades
-
-/abrigos/[id]       → Detalhe do abrigo
-/vitimas/cadastro   → Cadastro / edição de vítima
-/doacoes/cadastro   → Registro de doação
-/doacoes/[id]       → Detalhe da doação
-```
-
-**Proteção de rota:** O `_layout.tsx` redireciona automaticamente usuários não autenticados para `/login` e usuários autenticados para fora da tela de login.
-
----
-
-## Tecnologias
-
-| Tecnologia | Uso |
-|---|---|
-| React Native | Framework mobile |
-| Expo SDK 52+ | Toolchain e build |
-| Expo Router | Navegação baseada em arquivos |
-| TypeScript | Tipagem estática |
-| Axios | Requisições HTTP com interceptors JWT |
-| AsyncStorage | Persistência de token e sessão |
-| React Native Safe Area Context | Suporte a notch e dynamic island |
-| React Native Gesture Handler | Gestos nativos |
-| Expo Vector Icons (Ionicons) | Ícones |
+### Monitoramento por sensor (backend)
+- `POST /sensor/leitura` registra ocupação atual e temperatura de um abrigo
+- Quando `ocupacaoAtual >= capacidadeMaxima`, o status do abrigo é alterado automaticamente para LOTADO
 
 ---
 
 ## Estrutura do projeto
 
 ```
+Desktop/
+├── mobile/             # App React Native (Expo) — este repositório
+└── API_smart/          # API REST Spring Boot
+```
+
+### Mobile (`mobile/`)
+
+```
 mobile/
 ├── app/
-│   ├── _layout.tsx           # Root layout + proteção de rotas
-│   ├── index.tsx             # Redirect inicial
-│   ├── login.tsx             # Tela de login + status da API
-│   ├── register.tsx          # Cadastro de usuário
-│   ├── dashboard.tsx         # Alias → /(tabs)
+│   ├── _layout.tsx              # Root layout + proteção de rotas
+│   ├── index.tsx                # Redirect inicial
+│   ├── boasvindas.tsx           # Onboarding (apenas no primeiro acesso)
+│   ├── login.tsx                # Tela de login
+│   ├── register.tsx             # Cadastro de voluntário
+│   ├── sobre.tsx                # Sobre o projeto
 │   ├── (tabs)/
-│   │   ├── _layout.tsx       # Bottom tab navigator
-│   │   ├── index.tsx         # Dashboard
-│   │   ├── abrigos.tsx       # Lista de abrigos
-│   │   ├── vitimas.tsx       # Lista de vítimas
-│   │   ├── doacoes.tsx       # Lista de doações
-│   │   └── necessidades.tsx  # Lista de necessidades
-│   ├── abrigos/[id].tsx      # Detalhe de abrigo
-│   ├── vitimas/cadastro.tsx  # Cadastro/edição de vítima
-│   ├── doacoes/cadastro.tsx  # Registro de doação
-│   └── doacoes/[id].tsx      # Detalhe de doação
-│
-├── components/
-│   ├── CustomButton.tsx      # Botão (variantes: solid, outline, danger)
-│   ├── CustomInput.tsx       # Input com ícone, senha e erro
-│   ├── Header.tsx            # Cabeçalho com back e ação
-│   ├── Loading.tsx           # Indicador de carregamento
-│   ├── EmptyState.tsx        # Estado vazio com ação opcional
-│   ├── CardAbrigo.tsx
-│   ├── CardVitima.tsx
-│   ├── CardDoacao.tsx
-│   └── CardNecessidade.tsx
-│
-├── services/
-│   ├── api.ts                # Instância Axios centralizada + interceptors
-│   ├── apiStatus.ts          # checkApiStatus()
-│   ├── authService.ts        # login(), register()
-│   ├── abrigoService.ts      # getAbrigos(), getAbrigoById(), count
-│   ├── vitimaService.ts      # CRUD de vítimas + count
-│   ├── doacaoService.ts      # CRUD de doações + count
-│   └── necessidadeService.ts # getNecessidades() + count
-│
-├── hooks/
-│   ├── useAuth.ts            # AuthProvider + useAuth()
-│   └── useApi.ts             # useApi() + extractErrorMessage()
-│
-├── constants/
-│   ├── colors.ts             # Paleta de cores (dark theme)
-│   └── theme.ts              # Espaçamentos, fontes, bordas, sombras
-│
-├── types/
-│   └── index.ts              # Tipos TypeScript do domínio
-│
-└── utils/
-    ├── storage.ts            # AsyncStorage: token e usuário
-    └── formatters.ts         # Máscaras CPF/data, decodificação JWT
+│   │   ├── _layout.tsx          # Bottom tab navigator (5 abas)
+│   │   ├── index.tsx            # Dashboard
+│   │   ├── abrigos.tsx          # Lista de abrigos
+│   │   ├── vitimas.tsx          # Lista de vítimas
+│   │   ├── doacoes.tsx          # Doações
+│   │   └── alertas.tsx          # Alertas NASA
+│   ├── abrigos/
+│   │   ├── [id].tsx             # Detalhe do abrigo
+│   │   └── cadastro.tsx         # Cadastro / edição
+│   ├── vitimas/
+│   │   └── cadastro.tsx         # Cadastro / edição
+│   └── doacoes/
+│       ├── [id].tsx             # Detalhe da doação
+│       ├── cadastro.tsx         # Registrar doação
+│       └── novo/[abrigoId].tsx  # Nova doação por abrigo
+├── components/                  # Componentes reutilizáveis
+├── services/                    # Camada de acesso à API (Axios)
+├── hooks/                       # useAuth, useApi
+├── constants/                   # Cores e tema
+├── types/                       # Tipos TypeScript do domínio
+└── utils/                       # Máscaras, formatadores, AsyncStorage
+```
+
+### API (`API_smart/`)
+
+```
+API_smart/
+└── src/main/java/br/com/fiap/smartdisaster/
+    ├── config/          # SecurityConfig, CorsConfig, OpenApiConfig, DataLoader
+    ├── controller/      # AuthController, AbrigoController, VitimaController,
+    │                    # DoacaoController, NecessidadeController,
+    │                    # SensorController, MatchingController
+    ├── service/         # Lógica de negócio (7 services)
+    ├── repository/      # Spring Data JPA (8 repositórios)
+    ├── entity/          # Entidades JPA: Usuario, Admin, Voluntario, Abrigo,
+    │                    # Vitima, Doacao, Necessidade, SensorLeitura
+    ├── dto/             # Request e Response DTOs
+    ├── enums/           # Role, StatusAbrigo, StatusDoacao, StatusNecessidade
+    └── security/        # JwtTokenProvider, JwtAuthFilter, UserDetailsServiceImpl
 ```
 
 ---
 
-## Pré-requisitos
+## Como executar o backend
 
-- Node.js 18+
-- npm
-- Android Studio com emulador **ou** dispositivo físico com Expo Go
-- A [API SmartDisaster](../API_smart) rodando na porta `8080`
+### Pré-requisitos
+- Java 17+
+- Maven 3.8+ (ou use o `mvnw` incluído no projeto)
 
----
-
-## Como rodar
+### Passos
 
 ```bash
-# 1. Instalar dependências
-cd mobile
-npm install
+# 1. Entrar na pasta da API
+cd API_smart
 
-# 2. Iniciar o Expo (limpando cache)
-npx expo start -c
+# 2. Compilar e instalar dependências
+mvn clean install
 
-# 3. Emulador Android → pressione 'a'
-#    Dispositivo físico → escaneie o QR code com o Expo Go
+# 3. Subir a aplicação
+mvn spring-boot:run
 ```
 
-> A API deve estar rodando antes de abrir o app.
-> O indicador na tela de login mostrará **API Online** (verde) quando a conexão estiver ativa.
+Ou, sem Maven instalado localmente:
+
+```bash
+./mvnw spring-boot:run        # Linux/Mac
+mvnw.cmd spring-boot:run      # Windows
+```
+
+### Informações da API
+
+| Item | Valor |
+|---|---|
+| Porta padrão | `8080` |
+| Banco de dados | H2 in-memory (zero configuração) |
+| Swagger UI | http://localhost:8080/swagger-ui.html |
+| OpenAPI JSON | http://localhost:8080/v3/api-docs |
+| Console H2 | http://localhost:8080/h2-console |
+
+**Configuração H2 Console:**
+- JDBC URL: `jdbc:h2:mem:smartdisaster`
+- Usuário: `sa`
+- Senha: *(deixar em branco)*
+
+> O banco é recriado a cada reinicialização. O `DataLoader` insere dados de exemplo automaticamente na primeira execução.
+
+### Usuários de teste (inseridos pelo DataLoader)
+
+| Perfil | E-mail | Senha | Permissões |
+|---|---|---|---|
+| Admin | admin@smartdisaster.com | `123456` | Acesso completo |
+| Voluntário | voluntario@smartdisaster.com | `123456` | Cadastrar doações e vítimas, visualizar |
+| Voluntária | ana@smartdisaster.com | `vol123` | Cadastrar doações e vítimas, visualizar |
+
+### Dados de exemplo incluídos
+
+- 6 abrigos (SP, RS, RJ)
+- 3 vítimas
+- 9 necessidades
+- 4 doações
+
+### application.properties (dev — H2)
+
+Arquivo em `src/main/resources/application.properties`. Não requer alteração para rodar localmente.
+
+Para usar Oracle em produção, ative o profile:
+
+```bash
+mvn spring-boot:run -Dspring.profiles.active=oracle
+```
+
+E configure as variáveis de ambiente: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`.
 
 ---
 
-## Variáveis de ambiente
+## Como executar o mobile
 
-Por padrão a baseURL é `http://10.0.2.2:8080` (emulador Android aponta para o localhost da máquina).
+### Pré-requisitos
+- Node.js 18+
+- npm
+- Android Studio com emulador Android **ou** dispositivo físico com o app **Expo Go** instalado
+- API SmartDisaster rodando na porta `8080`
 
-Para usar dispositivo físico ou servidor remoto, crie `.env` na raiz do projeto mobile:
+### Passos
+
+```bash
+# 1. Entrar na pasta do app
+cd mobile
+
+# 2. Instalar dependências
+npm install
+
+# 3. Iniciar o Expo (limpa cache)
+npx expo start -c
+```
+
+No terminal do Expo:
+- Pressione `a` para abrir no emulador Android
+- Escaneie o QR code com o app **Expo Go** para rodar em dispositivo físico
+
+### Configuração da URL da API
+
+Por padrão, o app aponta para `http://10.0.2.2:8080`, que é o endereço do `localhost` da máquina host visto pelo emulador Android.
+
+**Para dispositivo físico ou outro endereço**, crie (ou edite) o arquivo `.env` na raiz do projeto mobile:
 
 ```env
 EXPO_PUBLIC_API_URL=http://SEU_IP_LOCAL:8080
 ```
 
-Ou via `app.json`:
+> Para descobrir seu IP local: `ipconfig` (Windows) ou `ifconfig` (Mac/Linux). Use o IP da rede Wi-Fi (ex: `192.168.x.x`).
 
-```json
-{
-  "expo": {
-    "extra": {
-      "apiUrl": "http://SEU_IP_LOCAL:8080"
-    }
-  }
-}
+A variável é lida em `services/api.ts`:
+
+```ts
+// services/api.ts
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://10.0.2.2:8080';
 ```
-
----
-
-## Integração com a API
-
-Endpoints consumidos pelo app:
-
-| Método | Rota | Descrição | Auth |
-|---|---|---|---|
-| POST | `/auth/register` | Cadastro de voluntário | Não |
-| POST | `/auth/login` | Login e geração de JWT | Não |
-| GET | `/actuator/health` | Status da API | Não |
-| GET | `/abrigos` | Lista paginada de abrigos | Sim |
-| GET | `/abrigos/{id}` | Detalhe de um abrigo | Sim |
-| GET | `/vitimas` | Lista paginada de vítimas | Sim |
-| GET | `/vitimas/{id}` | Detalhe de uma vítima | Sim |
-| POST | `/vitimas` | Cadastrar vítima | Sim |
-| PUT | `/vitimas/{id}` | Atualizar vítima | Sim |
-| DELETE | `/vitimas/{id}` | Remover vítima | Sim |
-| GET | `/doacoes` | Lista paginada de doações | Sim |
-| GET | `/doacoes/{id}` | Detalhe de uma doação | Sim |
-| POST | `/doacoes` | Registrar doação | Sim |
-| GET | `/necessidades` | Lista de necessidades | Sim |
-
-As respostas seguem o padrão **HATEOAS** com `_embedded` e `page.totalElements`.
 
 ---
 
@@ -279,20 +338,36 @@ O app usa **JWT Bearer Token**:
 
 1. Usuário faz login → API retorna `{ token, tipo, email, role }`
 2. Token salvo no dispositivo via AsyncStorage
-3. Todas as requisições incluem `Authorization: Bearer <token>` automaticamente (interceptor em `services/api.ts`)
+3. Todas as requisições incluem `Authorization: Bearer <token>` automaticamente via interceptor do Axios
 4. Se a API retornar `401`, o app limpa a sessão e redireciona para `/login`
-
-**Roles disponíveis:**
 
 | Role | Permissões |
 |---|---|
-| `ADMIN` | Acesso completo a todos os recursos |
-| `VOLUNTARIO` | Registro de doações e visualização geral |
+| `ADMIN` | Acesso completo — criar, editar e excluir todos os recursos |
+| `VOLUNTARIO` | Cadastrar doações e vítimas, visualizar abrigos e necessidades |
 
 ---
 
-## Autor
+## Principais endpoints da API
 
-**Pedro Vaz**
-pedrovazferreira10@gmail.com
-FIAP — Global Solution 2026/1
+Todos os endpoints estão documentados e testáveis via Swagger em `http://localhost:8080/swagger-ui.html`.
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/auth/register` | Cadastro de voluntário |
+| POST | `/auth/login` | Login e geração de JWT |
+| GET | `/abrigos` | Lista paginada de abrigos (HATEOAS) |
+| GET | `/abrigos/{id}` | Detalhe de um abrigo |
+| POST | `/abrigos` | Cadastrar abrigo (ADMIN) |
+| PUT | `/abrigos/{id}` | Atualizar abrigo (ADMIN) |
+| DELETE | `/abrigos/{id}` | Inativar abrigo (soft delete, ADMIN) |
+| GET | `/vitimas` | Lista paginada de vítimas |
+| POST | `/vitimas` | Cadastrar vítima |
+| GET | `/doacoes` | Lista paginada de doações |
+| POST | `/doacoes` | Registrar doação |
+| PATCH | `/doacoes/{id}/entregar` | Marcar doação como entregue |
+| PATCH | `/doacoes/{id}/cancelar` | Cancelar doação |
+| GET | `/necessidades` | Lista de necessidades |
+| POST | `/necessidades` | Cadastrar necessidade (ADMIN) |
+| POST | `/sensor/leitura` | Registrar leitura de sensor |
+| POST | `/matching/executar` | Executar matching doações × necessidades |

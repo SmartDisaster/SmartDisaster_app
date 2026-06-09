@@ -22,7 +22,6 @@ export default function CardAbrigo({ abrigo, onPress }: Props) {
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-      {/* colored left strip */}
       <View style={[styles.strip, { backgroundColor: color }]} />
 
       <View style={styles.body}>

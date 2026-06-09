@@ -125,7 +125,6 @@ export default function DoacaoDetailScreen() {
       <Header title="Detalhes da Doação" showBack />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
-        {/* Status + tipo */}
         <View style={styles.statusCard}>
           <View style={[styles.statusBadge, { backgroundColor: `${statusColor}22`, borderColor: `${statusColor}44` }]}>
             <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
@@ -136,7 +135,6 @@ export default function DoacaoDetailScreen() {
           <Text style={styles.tipoText}>{doacao.tipo}</Text>
         </View>
 
-        {/* Informações */}
         <View style={styles.infoCard}>
           <InfoRow icon="layers-outline" label="Quantidade" value={String(doacao.quantidade)} />
           <Divider />
@@ -163,7 +161,6 @@ export default function DoacaoDetailScreen() {
           )}
         </View>
 
-        {/* Ações — só para pendentes */}
         {isPendente && (
           <View style={styles.actionsCard}>
             <Text style={styles.actionsTitle}>Ações</Text>
@@ -182,7 +179,6 @@ export default function DoacaoDetailScreen() {
           </View>
         )}
 
-        {/* Zona de perigo */}
         <View style={styles.dangerZone}>
           <Text style={styles.dangerTitle}>Zona de Perigo</Text>
           <CustomButton

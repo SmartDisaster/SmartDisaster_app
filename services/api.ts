@@ -6,8 +6,7 @@ import { PagedResponse } from '../types';
 
 const BASE_URL =
   (Constants.expoConfig?.extra?.apiUrl as string | undefined) ??
-  process.env.EXPO_PUBLIC_API_URL ??
-  'http://10.0.2.2:8080';
+  process.env.EXPO_PUBLIC_API_URL ?? '';
 
 const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,

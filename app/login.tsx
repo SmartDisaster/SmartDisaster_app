@@ -68,7 +68,6 @@ export default function LoginScreen() {
         contentContainerStyle={[styles.container, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 32 }]}
         keyboardShouldPersistTaps="handled"
       >
-        {/* API Status Banner */}
         <View style={[styles.statusBanner, apiOnline === false && styles.statusBannerOffline]}>
           <View style={[styles.statusDot, apiOnline === false ? styles.statusDotOffline : styles.statusDotOnline]} />
           <Text style={[styles.statusText, apiOnline === false && styles.statusTextOffline]}>

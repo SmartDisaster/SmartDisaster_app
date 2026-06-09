@@ -173,7 +173,6 @@ export default function DoacoesScreen() {
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>
@@ -192,7 +191,6 @@ export default function DoacoesScreen() {
         )}
       </View>
 
-      {/* Tab switcher */}
       <View style={styles.tabRow}>
         <TouchableOpacity
           style={[styles.tabBtn, activeTab === 'ajudar' && styles.tabBtnActive]}
@@ -222,7 +220,6 @@ export default function DoacoesScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Content */}
       {isLoading ? (
         <Loading />
       ) : activeTab === 'ajudar' ? (
@@ -333,7 +330,6 @@ const styles = StyleSheet.create({
 
   list: { paddingHorizontal: 20, paddingBottom: 32 },
 
-  // Abrigo card
   abrigoCard: {
     backgroundColor: Colors.surface,
     borderRadius: Theme.borderRadius.lg,
@@ -412,7 +408,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // Doacao card
   doacaoCard: {
     backgroundColor: Colors.surface,
     borderRadius: Theme.borderRadius.lg,

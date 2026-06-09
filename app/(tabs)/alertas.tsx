@@ -17,8 +17,6 @@ import EmptyState from '../../components/EmptyState';
 import Colors from '../../constants/colors';
 import Theme from '../../constants/theme';
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
 const CATEGORY_MAP: Record<string, { label: string; icon: IconName; color: string; bg: string }> = {
@@ -56,8 +54,6 @@ function formatCoords(coords: number[]): string {
   const lon = coords[0].toFixed(2);
   return `${lat}° ${Number(lat) >= 0 ? 'N' : 'S'}, ${Math.abs(Number(lon)).toFixed(2)}° ${Number(lon) >= 0 ? 'L' : 'O'}`;
 }
-
-// ─── Card ────────────────────────────────────────────────────────────────────
 
 function AlertCard({ event }: { event: NasaEvent }) {
   const cat = event.categories[0];
@@ -116,8 +112,6 @@ function AlertCard({ event }: { event: NasaEvent }) {
   );
 }
 
-// ─── Screen ──────────────────────────────────────────────────────────────────
-
 export default function AlertasScreen() {
   const [events, setEvents] = useState<NasaEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -149,7 +143,6 @@ export default function AlertasScreen() {
         subtitle={loading ? 'Carregando...' : `${events.length} eventos ativos`}
       />
 
-      {/* Banner explicativo */}
       <View style={styles.banner}>
         <Ionicons name="planet" size={16} color="#60A5FA" />
         <Text style={styles.bannerText}>
@@ -193,8 +186,6 @@ export default function AlertasScreen() {
     </View>
   );
 }
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
