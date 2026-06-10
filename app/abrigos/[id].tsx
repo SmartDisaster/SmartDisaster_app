@@ -6,7 +6,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { getAbrigoById } from '../../services/abrigoService';
 import { getVitimas } from '../../services/vitimaService';
@@ -44,6 +44,7 @@ function getStatusColor(status: string) {
 
 export default function AbrigoDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const [abrigo, setAbrigo] = useState<Abrigo | null>(null);
   const [vitimas, setVitimas] = useState<Vitima[]>([]);
   const [necessidades, setNecessidades] = useState<Necessidade[]>([]);

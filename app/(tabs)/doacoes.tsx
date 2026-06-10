@@ -70,7 +70,12 @@ export default function DoacoesScreen() {
   }
 
   async function loadHistorico() {
-    if (!user?.id) return;
+    if (!user?.id) {
+      Alert.alert('Erro', 'Não foi possível identificar o usuário. Faça login novamente.');
+      setLoadingHistorico(false);
+      setRefreshing(false);
+      return;
+    }
     setLoadingHistorico(true);
     try {
       const result = await getDoacoesByVoluntario(user.id);
